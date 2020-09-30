@@ -20,12 +20,12 @@ byte degree[8] =
   0b00000,
 };
 
-//define DHT things
+//define DHT pins and type
 #define DHTPIN 11
 #define DHTPIN2 12
 #define DHTTYPE DHT11
 
-//init LCD
+//define the LCD
 LiquidCrystal lcd(7, 6, 2, 3, 4, 5);
 
 //define 2 functions for the DHTs so they can de addressed individually
@@ -60,7 +60,9 @@ void loop()
   int h2 = dht2.readHumidity();
   float t2 = dht2.readTemperature();
 
-  //LCD routine
+//LCD routine
+
+
   //Internal (main) DHT
   lcd.setCursor(0, 0);
   lcd.print("Int");
@@ -80,6 +82,7 @@ void loop()
   lcd.setCursor(13, 1);
   lcd.print(h2);
   lcd.print("%");
-  //make that shit 60fps
+  
+  //pcmasterrace 60fps
   delay(16);
 }
