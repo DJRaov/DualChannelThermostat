@@ -33,7 +33,7 @@ byte degree[8] =
 //define the LCD
 LiquidCrystal lcd(7, 6, 2, 3, 4, 5);
 
-//define both сука thermometers
+//define both thermometers
 TroykaThermometer temp1(A0);
 TroykaThermometer temp2(A1);
 
@@ -70,7 +70,7 @@ void loop()
 {
   //uncomment if using actual digital thermometers
   /*
-    //defined here because fuck syntax
+    //defined here because yes
     int h = dht.readHumidity();
     float t = dht.readTemperature();
     int h2 = dht2.readHumidity();
@@ -81,8 +81,7 @@ void loop()
   temp1.read();
   temp2.read();
 
-  //LCD routine
-
+//LCD routine
   //Main sensor
   lcd.setCursor(0, 0);
   lcd.print("CH1");
@@ -103,6 +102,7 @@ void loop()
     lcd.setCursor(15, 0);
     lcd.print(" ");
   }
+
 
   //Secondary sensor
   lcd.setCursor(0, 1);
