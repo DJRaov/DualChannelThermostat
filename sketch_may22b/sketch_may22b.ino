@@ -40,12 +40,12 @@ TroykaThermometer temp2(A1);
   DHT dht2(DHTPIN2, DHTTYPE);
 */
 
-DHT dht11_1(DHTPIN, DHT11)
-DHT dht11_2(DHTPIN2, DHT11)
-DHT dht21_1(DHTPIN, DHT21)
-DHT dht21_2(DHTPIN2, DHT21)
-DHT dht22_1(DHTPIN, DHT22)
-DHT dht22_2(DHTPIN2, DHT22)
+DHT dht11_1(DHTPIN, DHT11);
+DHT dht11_2(DHTPIN2, DHT11);
+DHT dht21_1(DHTPIN, DHT21);
+DHT dht21_2(DHTPIN2, DHT21);
+DHT dht22_1(DHTPIN, DHT22);
+DHT dht22_2(DHTPIN2, DHT22);
 
 void setup()
 {
@@ -53,6 +53,10 @@ void setup()
   pinMode(11, INPUT_PULLUP);
   pinMode(12, INPUT_PULLUP);
 
+  //declare and init as blank
+  int t = 0;
+  int h = 0;
+  
   //try to init all DHTs
   dht11_1.begin();
   dht11_2.begin();
@@ -61,17 +65,17 @@ void setup()
   dht22_1.begin();
   dht22_2.begin();
 
-  /*if/else chain pain begins here
-   * beware ye who enter here
-   */
+  /*   if/else chain pain orgy begins from this point   *
+   *              beware ye who enter here              *
+  */
   if (isnan(dht11_1.readTemperature()))
   {
-    continue
+    
   }
   else
   {
     lcd.setCursor(1, 0);
-    lcd.print("DHT11 Detected")
+    lcd.print("DHT11 Detected");
     lcd.setCursor(2, 1);
     lcd.print("on Channel 1");
     int t = dht11_1.readTemperature();
@@ -80,12 +84,12 @@ void setup()
   }
   if (isnan(dht11_2.readTemperature()))
   {
-    continue
+    
   }
   else
   {
     lcd.setCursor(1, 0);
-    lcd.print("DHT11 Detected")
+    lcd.print("DHT11 Detected");
     lcd.setCursor(2, 1);
     lcd.print("on Channel 2");
     int t = dht11_2.readTemperature();
@@ -94,12 +98,12 @@ void setup()
   }
   if (isnan(dht21_1.readTemperature()))
   {
-    continue
+    
   }
   else
   {
     lcd.setCursor(1, 0);
-    lcd.print("DHT21 Detected")
+    lcd.print("DHT21 Detected");
     lcd.setCursor(2, 1);
     lcd.print("on Channel 1");
     int t = dht21_1.readTemperature();
@@ -108,12 +112,12 @@ void setup()
   }
   if (isnan(dht21_2.readTemperature()))
   {
-    continue
+    
   }
   else
   {
     lcd.setCursor(1, 0);
-    lcd.print("DHT21 Detected")
+    lcd.print("DHT21 Detected");
     lcd.setCursor(2, 1);
     lcd.print("on Channel 2");
     int t = dht21_2.readTemperature();
@@ -121,12 +125,12 @@ void setup()
   }
   if (isnan(dht22_1.readTemperature()))
   {
-    continue
+    
   }
   else
   {
     lcd.setCursor(1, 0);
-    lcd.print("DHT22 Detected")
+    lcd.print("DHT22 Detected");
     lcd.setCursor(2, 1);
     lcd.print("on Channel 1");
     int t = dht22_1.readTemperature();
@@ -134,24 +138,17 @@ void setup()
   }
   if (isnan(dht22_2.readTemperature()))
   {
-    continue
+
   }
   else
   {
     lcd.setCursor(1, 0);
-    lcd.print("DHT22 Detected")
+    lcd.print("DHT22 Detected");
     lcd.setCursor(2, 1);
     lcd.print("on Channel 2");
     int t = dht22_2.readTemperature();
     delay(750);
   }
-
-
-
-  int h = dht.readHumidity();
-  float t = dht.readTemperature();
-  int h2 = dht2.readHumidity();
-  float t2 = dht2.readTemperature();
 
   //init LCD
   lcd.begin(16, 2);
