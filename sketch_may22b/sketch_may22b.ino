@@ -44,19 +44,35 @@ TroykaThermometer temp2(A1);
   DHT dht2(DHTPIN2, DHTTYPE);
 */
 
+DHT dht11_1(DHTPIN, DHT11)
+DHT dht11_2(DHTPIN2, DHT11)
+DHT dht21_1(DHTPIN, DHT21)
+DHT dht21_2(DHTPIN2, DHT21)
+DHT dht22_1(DHTPIN, DHT22)
+DHT dht22_2(DHTPIN2, DHT22)
 
 void setup()
 {
   //uncomment if using actual digital thermometers
-  /*
-    //set data line pins to pullup, since we want that shit to be reliable
-    pinMode(11, INPUT_PULLUP);
-    pinMode(12, INPUT_PULLUP);
+  //set data line pins to pullup, since we want that shit to be reliable
+  pinMode(11, INPUT_PULLUP);
+  pinMode(12, INPUT_PULLUP);
 
-    //init both DHTs
-    dht.begin();
-    dht2.begin();
-  */
+  //try to init all DHTs
+  dht11_1.begin();
+  dht11_2.begin();
+  dht21_1.begin();
+  dht21_2.begin();
+  dht22_1.begin();
+  dht22_2.begin();
+  
+
+
+  //defined here because yes
+  int h = dht.readHumidity();
+  float t = dht.readTemperature();
+  int h2 = dht2.readHumidity();
+  float t2 = dht2.readTemperature();
 
   //init LCD
   lcd.begin(16, 2);
@@ -68,16 +84,30 @@ void setup()
 
 void loop()
 {
- if 
+  if (isnan(h) and isnan(h2))
+  {
+    void TroykaTherm()
+  }
+  else if (isnan(h))
+  {
+    lcd.setCursor(1, 0);
+    lcd.print("Channel 1 DHT");
+    lcd.setCursor(2, 1);
+    lcd.print("not present!");
+    delay(2500);
+    void DHTxx()
+  }
+  if (isnan(h2))
+  {
+    lcd.setCursor(1, 0);
+    lcd.print("Channel 2 DHT");
+    lcd.setCursor(2, 1);
+    lcd.print("not present!");
+    delay(2500);
+    void DHTxx()
+  }
 }
-//uncomment if using actual digital thermometers
-/*
-  //defined here because yes
-  int h = dht.readHumidity();
-  float t = dht.readTemperature();
-  int h2 = dht2.readHumidity();
-  float t2 = dht2.readTemperature();
-*/
+
 void TroykaTherm() {
   //read the thermometers
   temp1.read();
@@ -128,10 +158,7 @@ void TroykaTherm() {
   }
 }
 
-void DHTLCD() {
-  /*LCD routine [Temp and humidity, DHTxx only]
-    DO NOT FORGET TO UNCOMMENT DHT-SPECIFIC CODE OTHERWISE IT WILL NOT COMPILE
-  */
+void DHTxx() {
   //Main DHT
   lcd.setCursor(0, 0);
   lcd.print("CH1");
