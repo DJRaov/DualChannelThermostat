@@ -61,7 +61,9 @@ void setup()
   dht22_1.begin();
   dht22_2.begin();
 
-  //defined here because yes
+  /*if/else chain pain begins here
+   * beware ye who enter here
+   */
   if (isnan(dht11_1.readTemperature()))
   {
     continue
@@ -73,6 +75,7 @@ void setup()
     lcd.setCursor(2, 1);
     lcd.print("on Channel 1");
     int t = dht11_1.readTemperature();
+    int h = dht11_1.readHumidity();
     delay(750);
   }
   if (isnan(dht11_2.readTemperature()))
@@ -86,6 +89,7 @@ void setup()
     lcd.setCursor(2, 1);
     lcd.print("on Channel 2");
     int t = dht11_2.readTemperature();
+    int h = dht11_2.readHumidity();
     delay(750);
   }
   if (isnan(dht21_1.readTemperature()))
@@ -99,6 +103,7 @@ void setup()
     lcd.setCursor(2, 1);
     lcd.print("on Channel 1");
     int t = dht21_1.readTemperature();
+    int h = dht21_1.readHumidity();
     delay(750);
   }
   if (isnan(dht21_2.readTemperature()))
