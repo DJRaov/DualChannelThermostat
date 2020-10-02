@@ -85,26 +85,28 @@ void loop()
   //Internal (main) DHT
   lcd.setCursor(0, 0);
   lcd.print("Int");
-  lcd.setCursor(6, 0);
+  lcd.setCursor(9, 0);
   lcd.print(cyka1.getTemperatureC()-17);
   lcd.write(byte(0));
-  lcd.setCursor(12, 0);
-  lcd.write(" ");
-  lcd.setCursor(13, 0);
-  lcd.print("no");
-  lcd.print("%");
+  if (cyka1.getTemperatureC() >= 100)
+  {
+   lcd.setCursor(15, 0);
+   lcd.print(" ");
+  }
 
   //External DHT
   lcd.setCursor(0, 1);
   lcd.print("Ext");
-  lcd.setCursor(6, 1);
+  lcd.setCursor(9, 1);
   lcd.print(cyka2.getTemperatureC()-17);
   lcd.write(byte(0));
-  lcd.setCursor(12, 1);
-  lcd.print(" ");
-  lcd.setCursor(13, 1);
-  lcd.print("no");
-  lcd.print("%");
+  if (cyka2.getTemperatureC() >= 100)
+  {
+   lcd.setCursor(15, 1);
+   lcd.print(" ");
+  }
+
+
   
   //pcmasterrace 60fps
   delay(250);
