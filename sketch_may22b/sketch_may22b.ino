@@ -68,20 +68,22 @@ void setup()
 
 void loop()
 {
-  //uncomment if using actual digital thermometers
-  /*
-    //defined here because yes
-    int h = dht.readHumidity();
-    float t = dht.readTemperature();
-    int h2 = dht2.readHumidity();
-    float t2 = dht2.readTemperature();
-  */
-
+ if 
+}
+//uncomment if using actual digital thermometers
+/*
+  //defined here because yes
+  int h = dht.readHumidity();
+  float t = dht.readTemperature();
+  int h2 = dht2.readHumidity();
+  float t2 = dht2.readTemperature();
+*/
+void TroykaTherm() {
   //read the thermometers
   temp1.read();
   temp2.read();
 
-//LCD routine [Temp-only]
+  //LCD routine [Temp-only]
   //Main sensor
   lcd.setCursor(0, 0);
   lcd.print("CH1");
@@ -115,20 +117,21 @@ void loop()
   {
     lcd.setCursor(9, 1);
   }
-  
+
   lcd.print(temp2.getTemperatureC() - 17);
   lcd.write(byte(0));
-  
+
   if (temp2.getTemperatureC() >= 100)                 //double-celcius bugfix
   {
     lcd.setCursor(15, 1);
     lcd.print(" ");
   }
+}
 
-
-/*LCD routine [Temp and humidity, DHTxx only]
-DO NOT FORGET TO UNCOMMENT DHT-SPECIFIC CODE OTHERWISE IT WILL NOT COMPILE
-*/
+void DHTLCD() {
+  /*LCD routine [Temp and humidity, DHTxx only]
+    DO NOT FORGET TO UNCOMMENT DHT-SPECIFIC CODE OTHERWISE IT WILL NOT COMPILE
+  */
   //Main DHT
   lcd.setCursor(0, 0);
   lcd.print("CH1");
