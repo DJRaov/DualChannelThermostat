@@ -127,6 +127,19 @@ void setup()
     int t = dht22_1.readTemperature();
     delay(750);
   }
+  if (isnan(dht22_2.readTemperature()))
+  {
+    continue
+  }
+  else
+  {
+    lcd.setCursor(1, 0);
+    lcd.print("DHT22 Detected")
+    lcd.setCursor(2, 1);
+    lcd.print("on Channel 2");
+    int t = dht22_2.readTemperature();
+    delay(750);
+  }
 
 
 
