@@ -81,7 +81,7 @@ void loop()
   temp1.read();
   temp2.read();
 
-//LCD routine
+//LCD routine [Temp-only]
   //Main sensor
   lcd.setCursor(0, 0);
   lcd.print("CH1");
@@ -125,6 +125,29 @@ void loop()
     lcd.print(" ");
   }
 
+
+/*LCD routine [Temp and humidity, DHTxx only]
+DO NOT FORGET TO UNCOMMENT DHT-SPECIFIC CODE OTHERWISE IT WILL NOT COMPILE
+*/
+  //Main DHT
+  lcd.setCursor(0, 0);
+  lcd.print("CH1");
+  lcd.setCursor(6, 0);
+  lcd.print(t);
+  lcd.write(byte(0));
+  lcd.setCursor(13, 0);
+  lcd.print(h);
+  lcd.print("%");
+
+  //Secondary DHT
+  lcd.setCursor(0, 1);
+  lcd.print("CH2");
+  lcd.setCursor(6, 1);
+  lcd.print(t2);
+  lcd.write(byte(0));
+  lcd.setCursor(13, 1);
+  lcd.print(h2);
+  lcd.print("%");
 
   //pcmasterrace 4fps
   delay(250);
