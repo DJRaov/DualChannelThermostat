@@ -4,8 +4,8 @@
 
 //uncomment if using actual digital thermometers
 /*
-#include <Adafruit_Sensor.h>
-#include <DHT.h>
+  #include <Adafruit_Sensor.h>
+  #include <DHT.h>
 */
 
 //LCD lib
@@ -25,23 +25,23 @@ byte degree[8] =
 };
 //uncommment if using actual digital thermometers
 /*
-//define DHT pins and type
-#define DHTPIN 11
-#define DHTPIN2 12
-#define DHTTYPE DHT11
+  //define DHT pins and type
+  #define DHTPIN 11
+  #define DHTPIN2 12
+  #define DHTTYPE DHT11
 */
 //define the LCD
 LiquidCrystal lcd(7, 6, 2, 3, 4, 5);
 
 //define both сука thermometers
-TroykaThermometer cyka1(A0);
-TroykaThermometer cyka2(A1);
+TroykaThermometer temp1(A0);
+TroykaThermometer temp2(A1);
 
 //uncomment if using actual digital thermometers
 /*
-//define 2 functions for the DHTs so they can de addressed individually
-DHT dht(DHTPIN, DHTTYPE);
-DHT dht2(DHTPIN2, DHTTYPE);
+  //define 2 functions for the DHTs so they can de addressed individually
+  DHT dht(DHTPIN, DHTTYPE);
+  DHT dht2(DHTPIN2, DHTTYPE);
 */
 
 
@@ -49,15 +49,15 @@ void setup()
 {
   //uncomment if using actual digital thermometers
   /*
-  //set data line pins to pullup, since we want that shit to be reliable
-  pinMode(11, INPUT_PULLUP);
-  pinMode(12, INPUT_PULLUP);
-  
-  //init both DHTs
-  dht.begin();
-  dht2.begin();
+    //set data line pins to pullup, since we want that shit to be reliable
+    pinMode(11, INPUT_PULLUP);
+    pinMode(12, INPUT_PULLUP);
+
+    //init both DHTs
+    dht.begin();
+    dht2.begin();
   */
-  
+
   //init LCD
   lcd.begin(16, 2);
 
@@ -70,44 +70,62 @@ void loop()
 {
   //uncomment if using actual digital thermometers
   /*
-  //defined here because fuck syntax
-  int h = dht.readHumidity();
-  float t = dht.readTemperature();
-  int h2 = dht2.readHumidity();
-  float t2 = dht2.readTemperature();
+    //defined here because fuck syntax
+    int h = dht.readHumidity();
+    float t = dht.readTemperature();
+    int h2 = dht2.readHumidity();
+    float t2 = dht2.readTemperature();
   */
-//read сука and блять thermometers at the same time
-  cyka1.read();
-  cyka2.read();
-  
-//LCD routine
 
-  //Internal (main) DHT
+  //read the thermometers
+  temp1.read();
+  temp2.read();
+
+  //LCD routine
+
+  //Main sensor
   lcd.setCursor(0, 0);
-  lcd.print("Int");
-  lcd.setCursor(9, 0);
-  lcd.print(cyka1.getTemperatureC()-17);
-  lcd.write(byte(0));
-  if (cyka1.getTemperatureC() >= 100)
+  lcd.print("CH1");
+
+  if (temp1.getTemperatureC() >= 100)
   {
-   lcd.setCursor(15, 0);
-   lcd.print(" ");
+    lcd.setCursor(8, 0);
+  }
+  else
+  {
+    lcd.setCursor(9, 0);
+  }
+  lcd.print(temp1.getTemperatureC() - 17);
+  lcd.write(byte(0));
+
+  if (temp1.getTemperatureC() >= 100)                 //double-celcius bugfix
+  {
+    lcd.setCursor(15, 0);
+    lcd.print(" ");
   }
 
-  //External DHT
+  //Secondary sensor
   lcd.setCursor(0, 1);
-  lcd.print("Ext");
-  lcd.setCursor(9, 1);
-  lcd.print(cyka2.getTemperatureC()-17);
-  lcd.write(byte(0));
-  if (cyka2.getTemperatureC() >= 100)
+  lcd.print("CH2");
+  if (temp2.getTemperatureC() >= 100)
   {
-   lcd.setCursor(15, 1);
-   lcd.print(" ");
+    lcd.setCursor(8, 1);
+  }
+  else
+  {
+    lcd.setCursor(9, 1);
+  }
+  
+  lcd.print(temp2.getTemperatureC() - 17);
+  lcd.write(byte(0));
+  
+  if (temp2.getTemperatureC() >= 100)                 //double-celcius bugfix
+  {
+    lcd.setCursor(15, 1);
+    lcd.print(" ");
   }
 
 
-  
-  //pcmasterrace 60fps
+  //pcmasterrace 4fps
   delay(250);
 }
