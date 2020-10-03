@@ -47,16 +47,21 @@ DHT dht21_2(DHTPIN2, DHT21);
 DHT dht22_1(DHTPIN, DHT22);
 DHT dht22_2(DHTPIN2, DHT22);
 
+int dht_ch1_type;
+int dht_ch2_type;
+bool dht_ch1_present;
+bool dht_ch2_present;
+int t;
+int t2;
+int h;
+int h2;
+
 void setup()
 {
   //set data line pins to pullup, since we want that shit to be reliable
   pinMode(11, INPUT_PULLUP);
   pinMode(12, INPUT_PULLUP);
 
-  //declare and init as blank
-  int t = 0;
-  int h = 0;
-  
   //try to init all DHTs
   dht11_1.begin();
   dht11_2.begin();
@@ -66,87 +71,70 @@ void setup()
   dht22_2.begin();
 
   /*   if/else chain pain orgy begins from this point   *
-   *              beware ye who enter here              *
+                  beware ye who enter here
   */
-  if (isnan(dht11_1.readTemperature()))
-  {
-    
-  }
-  else
+  if (isnan(dht11_1.readTemperature()) != 1)
   {
     lcd.setCursor(1, 0);
     lcd.print("DHT11 Detected");
     lcd.setCursor(2, 1);
     lcd.print("on Channel 1");
-    int t = dht11_1.readTemperature();
-    int h = dht11_1.readHumidity();
+    dht_ch1_type = 0;
+    dht_ch1_present = 1;
     delay(750);
   }
-  if (isnan(dht11_2.readTemperature()))
-  {
-    
-  }
-  else
+  if (isnan(dht11_2.readTemperature()) != 1)
   {
     lcd.setCursor(1, 0);
     lcd.print("DHT11 Detected");
     lcd.setCursor(2, 1);
     lcd.print("on Channel 2");
-    int t = dht11_2.readTemperature();
-    int h = dht11_2.readHumidity();
+    dht_ch1_type = 0;
+    dht_ch2_present = 1;
     delay(750);
   }
-  if (isnan(dht21_1.readTemperature()))
-  {
-    
-  }
-  else
-  {
-    lcd.setCursor(1, 0);
-    lcd.print("DHT21 Detected");
-    lcd.setCursor(2, 1);
-    lcd.print("on Channel 1");
-    int t = dht21_1.readTemperature();
-    int h = dht21_1.readHumidity();
-    delay(750);
-  }
-  if (isnan(dht21_2.readTemperature()))
-  {
-    
-  }
-  else
-  {
-    lcd.setCursor(1, 0);
-    lcd.print("DHT21 Detected");
-    lcd.setCursor(2, 1);
-    lcd.print("on Channel 2");
-    int t = dht21_2.readTemperature();
-    delay(750);
-  }
-  if (isnan(dht22_1.readTemperature()))
-  {
-    
-  }
-  else
-  {
-    lcd.setCursor(1, 0);
-    lcd.print("DHT22 Detected");
-    lcd.setCursor(2, 1);
-    lcd.print("on Channel 1");
-    int t = dht22_1.readTemperature();
-    delay(750);
-  }
-  if (isnan(dht22_2.readTemperature()))
-  {
 
+  if (isnan(dht21_1.readTemperature()) != 1)
+  {
+    lcd.setCursor(1, 0);
+    lcd.print("DHT21 Detected");
+    lcd.setCursor(2, 1);
+    lcd.print("on Channel 1");
+    dht_ch1_type = 1;
+    dht_ch1_present = 1;
+    delay(750);
   }
-  else
+
+  if (isnan(dht21_2.readTemperature()) != 1)
+  {
+    lcd.setCursor(1, 0);
+    lcd.print("DHT21 Detected");
+    lcd.setCursor(2, 1);
+    lcd.print("on Channel 2");
+    dht_ch1_type = 1;
+    dht_ch2_present = 1;
+    delay(750);
+  }
+
+  if (isnan(dht22_1.readTemperature()) != 1)
+  {
+    lcd.setCursor(1, 0);
+    lcd.print("DHT22 Detected");
+    lcd.setCursor(2, 1);
+    lcd.print("on Channel 1");
+    dht_ch1_type = 2;
+    dht_ch1_present = 1;
+    delay(750);
+  }
+
+  if (isnan(dht22_2.readTemperature()) != 1)
   {
     lcd.setCursor(1, 0);
     lcd.print("DHT22 Detected");
     lcd.setCursor(2, 1);
     lcd.print("on Channel 2");
-    int t = dht22_2.readTemperature();
+    dht_ch1_type = 2;
+    dht_ch2_present = 1;
     delay(750);
   }
 
@@ -160,29 +148,95 @@ void setup()
 
 void loop()
 {
-  if (isnan(h) and isnan(h2))
+  if (dht_ch1_present and dht_ch2_present == 0)
   {
-    void TroykaTherm()
+    void TroykaTherm();
   }
-  else if (isnan(h))
+  else
   {
-    lcd.setCursor(1, 0);
-    lcd.print("Channel 1 DHT");
-    lcd.setCursor(2, 1);
-    lcd.print("not present!");
-    delay(2500);
-    void DHTxx()
-  }
-  if (isnan(h2))
-  {
-    lcd.setCursor(1, 0);
-    lcd.print("Channel 2 DHT");
-    lcd.setCursor(2, 1);
-    lcd.print("not present!");
-    delay(2500);
-    void DHTxx()
+    if (dht_ch1_present == 0)
+    {
+      lcd.setCursor(1, 0);
+      lcd.print("Channel 1 DHT");
+      lcd.setCursor(2, 1);
+      lcd.print("not present!");
+      delay(2500);
+      void DHTxx();
+    }
+    if (dht_ch2_present == 0)
+    {
+      lcd.setCursor(1, 0);
+      lcd.print("Channel 2 DHT");
+      lcd.setCursor(2, 1);
+      lcd.print("not present!");
+      delay(2500);
+      void DHTxx();
+    }
   }
 }
+
+void DHTxx() {
+  //Main DHT
+
+  if (dht_ch1_present == 1)
+  {
+    switch (dht_ch1_type)
+    {
+      case 0:
+        t = dht11_1.readTemperature();
+        h = dht11_1.readHumidity();
+        break;
+      case 1:
+        t = dht21_1.readTemperature();
+        h = dht21_1.readHumidity();
+        break;
+      case 2:
+        t = dht22_1.readTemperature();
+        h = dht22_1.readHumidity();
+        break;
+    }
+  }
+  lcd.setCursor(0, 0);
+  lcd.print("CH1");
+  lcd.setCursor(6, 0);
+  lcd.print(t);
+  lcd.write(byte(0));
+  lcd.setCursor(13, 0);
+  lcd.print(h);
+  lcd.print("%");
+
+  //Secondary DHT
+  if (dht_ch1_present == 1)
+  {
+    switch (dht_ch1_type)
+    {
+      case 0:
+        t2 = dht11_2.readTemperature();
+        h2 = dht11_2.readHumidity();
+        break;
+      case 1:
+        t2 = dht21_2.readTemperature();
+        h2 = dht21_2.readHumidity();
+        break;
+      case 2:
+        t2 = dht22_2.readTemperature();
+        h2 = dht22_2.readHumidity();
+        break;
+    }
+  }
+  lcd.setCursor(0, 1);
+  lcd.print("CH2");
+  lcd.setCursor(6, 1);
+  lcd.print(t2);
+  lcd.write(byte(0));
+  lcd.setCursor(13, 1);
+  lcd.print(h2);
+  lcd.print("%");
+
+  //pcmasterrace 4fps
+  delay(250);
+}
+
 
 void TroykaTherm() {
   //read the thermometers
@@ -232,29 +286,4 @@ void TroykaTherm() {
     lcd.setCursor(15, 1);
     lcd.print(" ");
   }
-}
-
-void DHTxx() {
-  //Main DHT
-  lcd.setCursor(0, 0);
-  lcd.print("CH1");
-  lcd.setCursor(6, 0);
-  lcd.print(t);
-  lcd.write(byte(0));
-  lcd.setCursor(13, 0);
-  lcd.print(h);
-  lcd.print("%");
-
-  //Secondary DHT
-  lcd.setCursor(0, 1);
-  lcd.print("CH2");
-  lcd.setCursor(6, 1);
-  lcd.print(t2);
-  lcd.write(byte(0));
-  lcd.setCursor(13, 1);
-  lcd.print(h2);
-  lcd.print("%");
-
-  //pcmasterrace 4fps
-  delay(250);
 }
