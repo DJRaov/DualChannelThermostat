@@ -47,6 +47,7 @@ DHT dht21_2(DHTPIN2, DHT21);
 DHT dht22_1(DHTPIN, DHT22);
 DHT dht22_2(DHTPIN2, DHT22);
 
+//finally figured it out
 int dht_ch1_type;
 int dht_ch2_type;
 bool dht_ch1_present;
@@ -70,7 +71,7 @@ void setup()
   dht22_1.begin();
   dht22_2.begin();
 
-  /*   if/else chain pain orgy begins from this point   *
+  /*   even i dont know what happens from this point   *
                   beware ye who enter here
   */
   if (isnan(dht11_1.readTemperature()) != 1)
@@ -206,7 +207,7 @@ void DHTxx() {
   lcd.print("%");
 
   //Secondary DHT
-  if (dht_ch1_present == 1)
+  if (dht_ch2_present == 1)
   {
     switch (dht_ch1_type)
     {
