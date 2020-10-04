@@ -1,3 +1,5 @@
+void DHTxx();
+
 //the fucking russian thermometer lib
 //the thing is also analog smh smh
 #include <TroykaThermometer.h>
@@ -5,7 +7,6 @@
 //real thermometers lib
 #include <Adafruit_Sensor.h>
 #include <DHT.h>
-
 
 //LCD lib
 #include <LiquidCrystal.h>
@@ -29,17 +30,11 @@ byte degree[8] =
 //define the LCD
 LiquidCrystal lcd(7, 6, 2, 3, 4, 5);
 
-//define both thermometers
+//define both analog thermometers
 TroykaThermometer temp1(A0);
 TroykaThermometer temp2(A1);
 
-//uncomment if using actual digital thermometers
-/*
-  //define 2 functions for the DHTs so they can de addressed individually
-  DHT dht(DHTPIN, DHTTYPE);
-  DHT dht2(DHTPIN2, DHTTYPE);
-*/
-
+//define all possible DHTs
 DHT dht11_1(DHTPIN, DHT11);
 DHT dht11_2(DHTPIN2, DHT11);
 DHT dht21_1(DHTPIN, DHT21);
@@ -71,7 +66,7 @@ void setup()
   dht22_1.begin();
   dht22_2.begin();
 
-  /*   even i dont know what happens from this point   *
+  /*   even i dont know what happens beyond this point   *
                   beware ye who enter here
   */
   if (isnan(dht11_1.readTemperature()) != 1)
@@ -151,7 +146,7 @@ void loop()
 {
   if (dht_ch1_present and dht_ch2_present == 0)
   {
-    void TroykaTherm();
+    TroykaTherm();
   }
   else
   {
@@ -162,7 +157,7 @@ void loop()
       lcd.setCursor(2, 1);
       lcd.print("not present!");
       delay(2500);
-      void DHTxx();
+      DHTxx();
     }
     if (dht_ch2_present == 0)
     {
@@ -171,7 +166,7 @@ void loop()
       lcd.setCursor(2, 1);
       lcd.print("not present!");
       delay(2500);
-      void DHTxx();
+      DHTxx();
     }
   }
 }
