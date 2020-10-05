@@ -58,6 +58,9 @@ void setup()
   pinMode(11, INPUT_PULLUP);
   pinMode(12, INPUT_PULLUP);
 
+  //init LCD
+  lcd.begin(16, 2);
+
   //try to init all DHTs
   dht11_1.begin();
   dht11_2.begin();
@@ -78,6 +81,7 @@ void setup()
     dht_ch1_type = 0;
     dht_ch1_present = 1;
     delay(750);
+    lcd.clear();
   }
   if (isnan(dht11_2.readTemperature()) != 1)
   {
@@ -88,6 +92,7 @@ void setup()
     dht_ch1_type = 0;
     dht_ch2_present = 1;
     delay(750);
+    lcd.clear();
   }
 
   if (isnan(dht21_1.readTemperature()) != 1)
@@ -99,6 +104,7 @@ void setup()
     dht_ch1_type = 1;
     dht_ch1_present = 1;
     delay(750);
+    lcd.clear();
   }
 
   if (isnan(dht21_2.readTemperature()) != 1)
@@ -110,6 +116,7 @@ void setup()
     dht_ch1_type = 1;
     dht_ch2_present = 1;
     delay(750);
+    lcd.clear();
   }
 
   if (isnan(dht22_1.readTemperature()) != 1)
@@ -118,9 +125,11 @@ void setup()
     lcd.print("DHT22 Detected");
     lcd.setCursor(2, 1);
     lcd.print("on Channel 1");
+    lcd.clear();
     dht_ch1_type = 2;
     dht_ch1_present = 1;
     delay(750);
+    lcd.clear();
   }
 
   if (isnan(dht22_2.readTemperature()) != 1)
@@ -132,10 +141,8 @@ void setup()
     dht_ch1_type = 2;
     dht_ch2_present = 1;
     delay(750);
+    lcd.clear();
   }
-
-  //init LCD
-  lcd.begin(16, 2);
 
   //create degree character
   lcd.createChar(0, degree);
@@ -157,7 +164,7 @@ void loop()
       lcd.setCursor(2, 1);
       lcd.print("not present!");
       delay(2500);
-      DHTxx();
+      lcd.clear();
     }
     if (dht_ch2_present == 0)
     {
@@ -166,8 +173,9 @@ void loop()
       lcd.setCursor(2, 1);
       lcd.print("not present!");
       delay(2500);
-      DHTxx();
+      lcd.clear();
     }
+    DHTxx();
   }
 }
 
@@ -191,16 +199,25 @@ void DHTxx() {
         h = dht22_1.readHumidity();
         break;
     }
+    lcd.setCursor(0, 0);
+    lcd.print("CH1");
+    lcd.setCursor(6, 0);
+    lcd.print(t);
+    lcd.write(byte(0));
+    lcd.setCursor(13, 0);
+    lcd.print(h);
+    lcd.print("%");
   }
-  lcd.setCursor(0, 0);
-  lcd.print("CH1");
-  lcd.setCursor(6, 0);
-  lcd.print(t);
-  lcd.write(byte(0));
-  lcd.setCursor(13, 0);
-  lcd.print(h);
-  lcd.print("%");
-
+  else {
+    lcd.setCursor(0, 0);
+    lcd.print("CH1");
+    lcd.setCursor(6, 0);
+    lcd.print("--.--");
+    lcd.write(byte(0));
+    lcd.setCursor(13, 0);
+    lcd.print("--");
+    lcd.print("%");
+  }
   //Secondary DHT
   if (dht_ch2_present == 1)
   {
@@ -219,15 +236,25 @@ void DHTxx() {
         h2 = dht22_2.readHumidity();
         break;
     }
+    lcd.setCursor(0, 1);
+    lcd.print("CH2");
+    lcd.setCursor(6, 1);
+    lcd.print(t2);
+    lcd.write(byte(0));
+    lcd.setCursor(13, 1);
+    lcd.print(h2);
+    lcd.print("%");
   }
-  lcd.setCursor(0, 1);
-  lcd.print("CH2");
-  lcd.setCursor(6, 1);
-  lcd.print(t2);
-  lcd.write(byte(0));
-  lcd.setCursor(13, 1);
-  lcd.print(h2);
-  lcd.print("%");
+  else {
+    lcd.setCursor(0, 1);
+    lcd.print("CH2");
+    lcd.setCursor(6, 1);
+    lcd.print("--.--");
+    lcd.write(byte(0));
+    lcd.setCursor(13, 1);
+    lcd.print("--");
+    lcd.print("%");
+  }
 
   //pcmasterrace 4fps
   delay(250);
