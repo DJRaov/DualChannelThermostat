@@ -1,6 +1,4 @@
-void DHTxx();
-
-//the fucking russian thermometer lib
+//the russian thermometer lib
 //the thing is also analog smh smh
 #include <TroykaThermometer.h>
 
@@ -60,6 +58,9 @@ void setup()
 
   //init LCD
   lcd.begin(16, 2);
+
+  //create degree character
+  lcd.createChar(0, degree);
 
   //try to init all DHTs
   dht11_1.begin();
@@ -143,9 +144,6 @@ void setup()
     delay(750);
     lcd.clear();
   }
-
-  //create degree character
-  lcd.createChar(0, degree);
 }
 
 
@@ -218,6 +216,7 @@ void DHTxx() {
     lcd.print("--");
     lcd.print("%");
   }
+
   //Secondary DHT
   if (dht_ch2_present == 1)
   {
