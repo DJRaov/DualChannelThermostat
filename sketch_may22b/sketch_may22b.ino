@@ -144,12 +144,7 @@ void setup()
     delay(750);
     lcd.clear();
   }
-}
-
-
-void loop()
-{
-  if (dht_ch1_present and dht_ch2_present == 0)
+  if (dht_ch1_present && dht_ch2_present == 0)
   {
     TroykaTherm();
   }
@@ -173,6 +168,19 @@ void loop()
       delay(2500);
       lcd.clear();
     }
+    DHTxx();
+  }
+}
+
+
+void loop()
+{
+  if (dht_ch1_present && dht_ch2_present == 0)
+  {
+    TroykaTherm();
+  }
+  else
+  {
     DHTxx();
   }
 }
@@ -308,4 +316,6 @@ void TroykaTherm() {
     lcd.setCursor(15, 1);
     lcd.print(" ");
   }
+  delay(250);
+  lcd.clear();
 }
