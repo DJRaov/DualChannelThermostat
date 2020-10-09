@@ -234,21 +234,13 @@ void DHTxx() {
         break;
     }
     Serial.println("  ---   LCD CH1 Draw    --- ");
-    Serial.println("LCD cursor set to 0,0");
     lcd.setCursor(0, 0);
-    Serial.println("Printing CH1");
     lcd.print("CH1");
-    Serial.println("LCD cursor set to 6,0");
     lcd.setCursor(6, 0);
-    Serial.println("Printing the temperature from the DHT on CH1");
     lcd.print(t);
-    Serial.println("Priting the degree symbol");
     lcd.write(byte(0));
-    Serial.println("LCD cursor set to 13,0");
     lcd.setCursor(13, 0);
-    Serial.println("Printing the humidity from the DHT on CH1");
     lcd.print(h);
-    Serial.println("the percent");
     lcd.print("%");
   }
   else {
@@ -289,21 +281,13 @@ void DHTxx() {
         break;
     }
     Serial.println("  ---  LCD CH2 Draw   ---  ");
-    Serial.println("LCD cursor set to 0,1");
     lcd.setCursor(0, 1);
-    Serial.println("Printing CH2");
     lcd.print("CH2");
-    Serial.println("LCD cursor set to 6,1");
     lcd.setCursor(6, 1);
-    Serial.println("Printing the temperature from the DHT on CH2");
     lcd.print(t2);
-    Serial.println("Priting the degree symbol");
     lcd.write(byte(0));
-    Serial.println("LCD cursor set to 13,1");
     lcd.setCursor(13, 1);
-    Serial.println("Printing the humidity from the DHT on CH2");
     lcd.print(h2);
-    Serial.println("the percent");
     lcd.print("%");
   }
   else {
@@ -317,9 +301,11 @@ void DHTxx() {
     lcd.print("--");
     lcd.print("%");
   }
-  Serial.println("  ---   LCD CH1 End   ---  ");
+  Serial.println("  ---   LCD CH2 End   ---  ");
   //pcmasterrace 4fps
   delay(250);
+  lcd.clear();
+  Serial.println("  ---  LCD Cleared    ---");
   Serial.println("----- Sequence ended. -----");
 }
 
@@ -334,12 +320,12 @@ void TroykaTherm() {
   temp2.read();
 
   Serial.println("    ---      LCD CH1 Begin     ---");
-  //LCD routine [Temp-only]
+ //LCD routine [Temp-only]
   //Main sensor
   Serial.println("LCD cursor set to 0,0");
   lcd.setCursor(0, 0);
   lcd.print("CH1");
-  Serial.println("Check if the read temp is >100");
+  Serial.println("Is temp >100?");
   if (temp1.getTemperatureC() >= 100)
   {
     Serial.println("LCD cursor set 8,0");
@@ -350,17 +336,14 @@ void TroykaTherm() {
     Serial.println("LCD cursor set 9,0");
     lcd.setCursor(9, 0);
   }
-  Serial.println("Print CH1 temperature biased by -17 deg");
+  Serial.println("Print CH1 temp but -17 deg");
   lcd.print(temp1.getTemperatureC() - 17);
   lcd.write(byte(0));
-  
-  Serial.println("Check if the read temp is <100");
+
   if (temp1.getTemperatureC() <= 100)                 //double-celcius bugfix
   {
-    Serial.println("Inserting blank space ");
-    Serial.println("LCD cursor set to 15,0");
+    Serial.println("Temp is <100, Inserting blank space ");
     lcd.setCursor(15, 0);
-    Serial.println("print that mofo");
     lcd.print(" ");
   }
   Serial.println("    ---       LCD CH1 End      ---");
@@ -370,9 +353,9 @@ void TroykaTherm() {
   Serial.println("LCD cursor set to 0,1");
   lcd.setCursor(0, 1);
   lcd.print("CH1");
-  Serial.println("Check if the read temp is >100");
   if (temp2.getTemperatureC() >= 100)
   {
+    Serial.println("Temp is >100 for some reason, ok.");
     Serial.println("LCD cursor set 8,1");
     lcd.setCursor(8, 1);
   }
@@ -384,17 +367,13 @@ void TroykaTherm() {
   Serial.println("Print CH2 temperature biased by -17 deg");
   lcd.print(temp2.getTemperatureC() - 17);
   lcd.write(byte(0));
-  
-  Serial.println("Check if the read temp is <100");
+
   if (temp1.getTemperatureC() <= 100)                 //double-celcius bugfix
   {
-    Serial.println("Inserting blank space ");
-    Serial.println("LCD cursor set to 15,1");
+    Serial.println("Temp is <100, Inserting blank space ");
     lcd.setCursor(15, 1);
-    Serial.println("print that mofo");
     lcd.print(" ");
   }
-  Serial.println("Waiting 250ms...");
   delay(250);
   Serial.println("Display cleared");
   lcd.clear();
