@@ -1,12 +1,10 @@
-//the fucking russian thermometer lib
+//the russian thermometer lib
 //the thing is also analog smh smh
 #include <TroykaThermometer.h>
 
-//uncomment if using actual digital thermometers
-/*
+//real thermometers lib
 #include <Adafruit_Sensor.h>
 #include <DHT.h>
-*/
 
 //LCD lib
 #include <LiquidCrystal.h>
@@ -23,86 +21,361 @@ byte degree[8] =
   0b00011,
   0b00000,
 };
-//uncommment if using actual digital thermometers
-/*
-//define DHT pins and type
+//define DHT pins
 #define DHTPIN 11
 #define DHTPIN2 12
-#define DHTTYPE DHT11
-*/
+
 //define the LCD
 LiquidCrystal lcd(7, 6, 2, 3, 4, 5);
 
-//define both сука thermometers
-TroykaThermometer cyka1(A0);
-TroykaThermometer cyka2(A1);
+//define both analog thermometers
+TroykaThermometer temp1(A0);
+TroykaThermometer temp2(A1);
 
-//uncomment if using actual digital thermometers
-/*
-//define 2 functions for the DHTs so they can de addressed individually
-DHT dht(DHTPIN, DHTTYPE);
-DHT dht2(DHTPIN2, DHTTYPE);
-*/
+//define all possible DHTs
+DHT dht11_1(DHTPIN, DHT11);
+DHT dht11_2(DHTPIN2, DHT11);
+DHT dht21_1(DHTPIN, DHT21);
+DHT dht21_2(DHTPIN2, DHT21);
+DHT dht22_1(DHTPIN, DHT22);
+DHT dht22_2(DHTPIN2, DHT22);
 
+//finally figured it out
+int dht_ch1_type;
+int dht_ch2_type;
+bool dht_ch1_present;
+bool dht_ch2_present;
+int t;
+int t2;
+int h;
+int h2;
 
 void setup()
 {
-  //uncomment if using actual digital thermometers
-  /*
+  //open up serial for debug
+  Serial.begin(9600);
+  Serial.println("Welcome to the shitfest. I don't know how you entered here, but you did. Now witness debug info.");    //yes
+
+
   //set data line pins to pullup, since we want that shit to be reliable
   pinMode(11, INPUT_PULLUP);
   pinMode(12, INPUT_PULLUP);
-  
-  //init both DHTs
-  dht.begin();
-  dht2.begin();
-  */
-  
+  Serial.println("Pins 11 and 12 put up as INPUT_PULLUP");
+
   //init LCD
   lcd.begin(16, 2);
+  Serial.println("LCD Init");
 
   //create degree character
   lcd.createChar(0, degree);
+
+  //try to init all DHTs
+  dht11_1.begin();
+  dht11_2.begin();
+  dht21_1.begin();
+  dht21_2.begin();
+  dht22_1.begin();
+  dht22_2.begin();
+  Serial.println("DHT Init");
+
+  /*   even i dont know what happens beyond this point   *
+                  beware ye who enter here
+  */
+  Serial.println("Check for DHT11 on CH1");
+  if (isnan(dht11_1.readTemperature()) != 1)
+  {
+    lcd.setCursor(1, 0);
+    lcd.print("DHT11 Detected");
+    lcd.setCursor(2, 1);
+    lcd.print("on Channel 1");
+    dht_ch1_type = 0;
+    dht_ch1_present = 1;
+    delay(750);
+    lcd.clear();
+  }
+  Serial.println("Check for DHT11 on CH2");
+  if (isnan(dht11_2.readTemperature()) != 1)
+  {
+    lcd.setCursor(1, 0);
+    lcd.print("DHT11 Detected");
+    lcd.setCursor(2, 1);
+    lcd.print("on Channel 2");
+    dht_ch1_type = 0;
+    dht_ch2_present = 1;
+    delay(750);
+    lcd.clear();
+  }
+
+  Serial.println("Check for DHT21 on CH1");
+  if (isnan(dht21_1.readTemperature()) != 1)
+  {
+    lcd.setCursor(1, 0);
+    lcd.print("DHT21 Detected");
+    lcd.setCursor(2, 1);
+    lcd.print("on Channel 1");
+    dht_ch1_type = 1;
+    dht_ch1_present = 1;
+    delay(750);
+    lcd.clear();
+  }
+
+  Serial.println("Check for DHT21 on CH2");
+  if (isnan(dht21_2.readTemperature()) != 1)
+  {
+    lcd.setCursor(1, 0);
+    lcd.print("DHT21 Detected");
+    lcd.setCursor(2, 1);
+    lcd.print("on Channel 2");
+    dht_ch1_type = 1;
+    dht_ch2_present = 1;
+    delay(750);
+    lcd.clear();
+  }
+
+  Serial.println("Check for DHT22 on CH1");
+  if (isnan(dht22_1.readTemperature()) != 1)
+  {
+    lcd.setCursor(1, 0);
+    lcd.print("DHT22 Detected");
+    lcd.setCursor(2, 1);
+    lcd.print("on Channel 1");
+    lcd.clear();
+    dht_ch1_type = 2;
+    dht_ch1_present = 1;
+    delay(750);
+    lcd.clear();
+  }
+
+  Serial.println("Check for DHT22 on CH2");
+  if (isnan(dht22_2.readTemperature()) != 1)
+  {
+    lcd.setCursor(1, 0);
+    lcd.print("DHT22 Detected");
+    lcd.setCursor(2, 1);
+    lcd.print("on Channel 2");
+    dht_ch1_type = 2;
+    dht_ch2_present = 1;
+    delay(750);
+    lcd.clear();
+  }
+
+  Serial.println("----- Check if any DHTs were found -----");
+  if (dht_ch1_present && dht_ch2_present == 0)
+  {
+    Serial.println("No DHTs found, calling TroykaTherm");
+    TroykaTherm();
+  }
+  else
+  {
+    if (dht_ch1_present == 0)
+    {
+      Serial.println("DHTs on CH1 not present, displaying");
+      lcd.setCursor(1, 0);
+      lcd.print("Channel 1 DHT");
+      lcd.setCursor(2, 1);
+      lcd.print("not present!");
+      delay(2500);
+      lcd.clear();
+    }
+    if (dht_ch2_present == 0)
+    {
+      Serial.println("DHTs on CH2 not present, displaying");
+      lcd.setCursor(1, 0);
+      lcd.print("Channel 2 DHT");
+      lcd.setCursor(2, 1);
+      lcd.print("not present!");
+      delay(2500);
+      lcd.clear();
+    }
+    Serial.println("At least one DHT was found, calling DHTxx");
+    DHTxx();
+  }
 }
 
 
 void loop()
 {
-  //uncomment if using actual digital thermometers
-  /*
-  //defined here because fuck syntax
-  int h = dht.readHumidity();
-  float t = dht.readTemperature();
-  int h2 = dht2.readHumidity();
-  float t2 = dht2.readTemperature();
-  */
-//read сука and блять thermometers at the same time
-  cyka1.read();
-  cyka2.read();
-  
-//LCD routine
+  if (dht_ch1_present && dht_ch2_present == 0)
+  {
+    Serial.println("----- Calling TroykaTherm -----");
+    TroykaTherm();
+  }
+  else
+  {
+    Serial.println("----- Calling DHTxx -----");
+    DHTxx();
+  }
+}
+
+void DHTxx() {
+  Serial.println("----- DHTxx was called -----");
+  Serial.println("  ---   LCD CH1 Begin  ---  ");
+  //Main DHT
+  Serial.println("Was a DHT on CH1 found?");
+  if (dht_ch1_present == 1)
+  {
+    Serial.println("Yep, checking which type");
+    switch (dht_ch1_type)
+    {
+      case 0:
+        Serial.println("The type is DHT11");
+        t = dht11_1.readTemperature();
+        h = dht11_1.readHumidity();
+        break;
+      case 1:
+        Serial.println("The type is DHT21");
+        t = dht21_1.readTemperature();
+        h = dht21_1.readHumidity();
+        break;
+      case 2:
+        Serial.println("The type is DHT22");
+        t = dht22_1.readTemperature();
+        h = dht22_1.readHumidity();
+        break;
+    }
+    Serial.println("  ---   LCD CH1 Draw    --- ");
+    lcd.setCursor(0, 0);
+    lcd.print("CH1");
+    lcd.setCursor(6, 0);
+    lcd.print(t);
+    lcd.write(byte(0));
+    lcd.setCursor(13, 0);
+    lcd.print(h);
+    lcd.print("%");
+  }
+  else {
+    Serial.println("DHTs on CH1 were not found, printing blanks");
+    lcd.setCursor(0, 0);
+    lcd.print("CH1");
+    lcd.setCursor(6, 0);
+    lcd.print("--.--");
+    lcd.write(byte(0));
+    lcd.setCursor(13, 0);
+    lcd.print("--");
+    lcd.print("%");
+  }
+  Serial.println("  ---    LCD CH1 End   ---  ");
+
+  Serial.println("  ---   LCD CH2 Begin  ---  ");
+  //Secondary DHT
+  Serial.println("Was a DHT on CH2 found?");
+  if (dht_ch2_present == 1)
+  {
+    Serial.println("Yes, checking which type");
+    switch (dht_ch1_type)
+    {
+      case 0:
+        Serial.println("The type is DHT11");
+        t2 = dht11_2.readTemperature();
+        h2 = dht11_2.readHumidity();
+        break;
+      case 1:
+        Serial.println("The type is DHT21");
+        t2 = dht21_2.readTemperature();
+        h2 = dht21_2.readHumidity();
+        break;
+      case 2:
+        Serial.println("The type is DHT22");
+        t2 = dht22_2.readTemperature();
+        h2 = dht22_2.readHumidity();
+        break;
+    }
+    Serial.println("  ---  LCD CH2 Draw   ---  ");
+    lcd.setCursor(0, 1);
+    lcd.print("CH2");
+    lcd.setCursor(6, 1);
+    lcd.print(t2);
+    lcd.write(byte(0));
+    lcd.setCursor(13, 1);
+    lcd.print(h2);
+    lcd.print("%");
+  }
+  else {
+    Serial.println("DHTs on CH2 were not found, printing blanks");
+    lcd.setCursor(0, 1);
+    lcd.print("CH2");
+    lcd.setCursor(6, 1);
+    lcd.print("--.--");
+    lcd.write(byte(0));
+    lcd.setCursor(13, 1);
+    lcd.print("--");
+    lcd.print("%");
+  }
+  Serial.println("  ---   LCD CH2 End   ---  ");
+  //pcmasterrace 4fps
+  delay(250);
+  lcd.clear();
+  Serial.println("  ---  LCD Cleared    ---");
+  Serial.println("----- Sequence ended. -----");
+}
 
 
-  //Internal (main) DHT
+void TroykaTherm() {
+  Serial.println("  ----- TroykaTherm was called -----  ");
+  Serial.println("    ---     Thermo reading     ---  ");
+  //read the thermometers
+  Serial.println("Sensor 1 read");
+  temp1.read();
+  Serial.println("Sensor 2 read");
+  temp2.read();
+
+  Serial.println("    ---      LCD CH1 Begin     ---");
+ //LCD routine [Temp-only]
+  //Main sensor
+  Serial.println("LCD cursor set to 0,0");
   lcd.setCursor(0, 0);
-  lcd.print("Int");
-  lcd.setCursor(6, 0);
-  lcd.print(cyka1.getTemperatureC());
+  lcd.print("CH1");
+  Serial.println("Is temp >100?");
+  if (temp1.getTemperatureC() >= 100)
+  {
+    Serial.println("LCD cursor set 8,0");
+    lcd.setCursor(8, 0);
+  }
+  else
+  {
+    Serial.println("LCD cursor set 9,0");
+    lcd.setCursor(9, 0);
+  }
+  Serial.println("Print CH1 temp but -17 deg");
+  lcd.print(temp1.getTemperatureC() - 17);
   lcd.write(byte(0));
-  lcd.setCursor(13, 0);
-  lcd.print("no");
-  lcd.print("%");
 
-  //External DHT
+  if (temp1.getTemperatureC() <= 100)                 //double-celcius bugfix
+  {
+    Serial.println("Temp is <100, Inserting blank space ");
+    lcd.setCursor(15, 0);
+    lcd.print(" ");
+  }
+  Serial.println("    ---       LCD CH1 End      ---");
+
+  Serial.println("    ---      LCD CH2 Begin     ---");
+  //Secondary sensor
+  Serial.println("LCD cursor set to 0,1");
   lcd.setCursor(0, 1);
-  lcd.print("Ext");
-  lcd.setCursor(6, 1);
-  lcd.print(cyka2.getTemperatureC());
+  lcd.print("CH1");
+  if (temp2.getTemperatureC() >= 100)
+  {
+    Serial.println("Temp is >100 for some reason, ok.");
+    Serial.println("LCD cursor set 8,1");
+    lcd.setCursor(8, 1);
+  }
+  else
+  {
+    Serial.println("LCD cursor set 9,1");
+    lcd.setCursor(9, 1);
+  }
+  Serial.println("Print CH2 temperature biased by -17 deg");
+  lcd.print(temp2.getTemperatureC() - 17);
   lcd.write(byte(0));
-  lcd.setCursor(13, 1);
-  lcd.print("no");
-  lcd.print("%");
-  
-  //pcmasterrace 60fps
-  delay(67);
+
+  if (temp1.getTemperatureC() <= 100)                 //double-celcius bugfix
+  {
+    Serial.println("Temp is <100, Inserting blank space ");
+    lcd.setCursor(15, 1);
+    lcd.print(" ");
+  }
+  delay(250);
+  Serial.println("Display cleared");
+  lcd.clear();
+  Serial.println("----- Sequence ended. -----");
 }
